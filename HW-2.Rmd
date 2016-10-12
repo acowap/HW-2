@@ -1,6 +1,6 @@
 ---
 title: "MATH 216 Homework 2"
-author: "WRITE YOUR NAME HERE"
+author: "Alden Cowap"
 output:
   html_document:
     toc: true
@@ -10,9 +10,7 @@ output:
 ---
 
 ```{r, echo=FALSE, message=FALSE}
-library(ggplot2)
-library(dplyr)
-library(readr) 
+library(tidyverse)
 ```
 
 
@@ -29,9 +27,9 @@ profiles <- read_csv(file="profiles.csv")
 
 Please indicate
 
-* Who you collaborated with:
-* Roughly how much time you spent on this HW so far:
-* The URL of the RPubs published URL [here](https://www.nhl.com/).
+* Who you collaborated with: Emily Goins
+* Roughly how much time you spent on this HW so far: 2 hours
+* The URL of the RPubs published URL [here](http://rpubs.com/acowap/HW2).
 * What gave you the most trouble:
 * Any comments you have:
 
@@ -49,11 +47,47 @@ specifically on the relationship between gender and
 all keeping in mind in HW-3, you will be fitting a logistic regression to
 predict a user's gender based on these variables.
 
-```{r, echo=TRUE, message=TRUE, warning=TRUE, fig.width=8, fig.height=4.5}
+Sex vs. Income
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5}
 
+profiles2 <- profiles %>% filter(!is.na(job)) %>% filter(income != -1) %>% filter(!is.na(sex))
+
+ggplot(data = profiles2, aes(x = sex, y = income)) +
+  geom_boxplot()
+
+profilesincome <- profiles2 %>% group_by(income, sex) %>% tally(sort = TRUE)
+
+ggplot(data = profilesincome, aes(x = n, y = income)) + facet_wrap(~sex) + geom_point()
+
+ggplot(data = profiles2, aes(x = income, fill = sex)) + geom_bar(position = "dodge") 
+
+ggplot(data = profiles2, aes(x = income, fill = sex)) + geom_bar(position = "fill")
 ```
 
+Based on these graphs, we can see that men have a higher mean income, that it is partially driven by outliers because more men than women report incomes over $250,000. Looking at the percentage male vs. female for each income level doesn't give us much information since there are more men than women in the data set. 
 
+
+Sex vs. Job
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5}
+
+ggplot(data = profiles2, aes(x = job, fill = sex)) + geom_bar(position = "fill") + coord_flip()
+
+ggplot(data = profiles2, aes(x = job, fill = sex)) + geom_bar(position = "stack") + coord_flip()
+
+```
+Since there are more men than women in the data set, it makes sense that almost all of the job categorys have more than 50% men. The three jobs that come close or exceed 50% female are clerical/administrative, education/academia, and medicine/health. The jobs with the fewest women seem to be construction/craftsmenship, military, and computer/hardware/software. However, since the data set is from San Fransisco where a lot of individuals work in the Tech/computer industry, the percentage in that industry could easily be skewed by pure numbers. 
+
+
+Sex vs. Diet
+```{r, echo=TRUE, message=FALSE, warning=FALSE, fig.width=8, fig.height=4.5}
+
+
+ggplot(data = profiles2, aes(x = diet, fill = sex)) + geom_bar(position = "fill") + coord_flip()
+
+ggplot(data = profiles2, aes(x = diet, fill = sex)) + geom_bar(position = "stack") + coord_flip()
+```
+
+A vast majority of people say that they eat some variation of "anything", though if they do have a dietary restriction they are most likely to be "mostly vegitatian". Dietary habits don't seem to be gendered one way or the other with most options falling around 40% female (which makes sense given that our data set is 40% female). It seems that only men are Kosher and Halal, but that would be a dangerous assumption to pull given that so few members of the data set are Koser or Halal. 
 
 ## Question 2:
 
