@@ -40,8 +40,8 @@ renderPlot({
     
   
   ggplot(data=movies2, aes(x=budget, y=rating)) + 
-    geom_point() +
-    labs(x = "Budget", y = "Rating", title = "Budget vs. Rating")
+    geom_point() + scale_x_log10() + geom_smooth(se = FALSE) +
+    labs(x = "Log of Budget", y = "Rating", title = "Budget vs. Rating")
 
  
   
@@ -56,7 +56,10 @@ renderPlot({
     summarise(av_rating = mean(rating))
   
   ggplot(data=movies3, aes(budget, y= av_rating)) + geom_point() + 
-    labs(x = "Budget", y = "Average Rating", title = "Budget vs. Average Rating")
+    scale_x_log10() + geom_smooth(se=FALSE) +
+    labs(x = "Log of Budget", y = "Average Rating", title = "Budget vs. Average Rating")
   
 })
 ```
+
+For both Comedy movies and other genres, budget does not seem to have a causal effect on rating or average rating. 
